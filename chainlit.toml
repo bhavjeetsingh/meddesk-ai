@@ -1,0 +1,23 @@
+[project]
+enable_telemetry = false
+name = "CareFirst AI Receptionist"
+description = "AI-powered medical receptionist for CareFirst Medical Center"
+
+[UI]
+name = "CareFirst AI"
+description = "Your virtual receptionist assistant"
+default_collapse_content = true
+layout = "wide"
+custom_css = "/public/custom.css"
+
+[UI.theme]
+layout = "wide"
+
+[UI.header_links]
+    name = "Sidebar"
+    display_name = "📋 Sidebar"
+    url = "#"
+    target = "_self"
+
+[database]
+type = "none"

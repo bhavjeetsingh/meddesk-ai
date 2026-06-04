@@ -1,0 +1,45 @@
+# CareFirst Medical Center - Dependencies (FREE - No API Costs)
+
+# Core
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+python-multipart
+
+# LLM - Ollama (FREE, Local)
+ollama
+langchain-ollama
+langchain
+langchain-community
+langchain-core
+langchain-chroma
+langchain-text-splitters
+
+# Embeddings - HuggingFace (FREE, Local)
+sentence-transformers
+
+# Vector Store
+chromadb
+
+# Document Processing
+pypdf
+python-docx
+
+# Database
+sqlalchemy
+aiosqlite
+
+# UI - Chainlit
+chainlit
+
+# Utilities
+httpx
+pydantic-settings
+loguru
+rich
+aiofiles
+
+# Sentiment Analysis (FREE, Local)
+textblob
+nltk

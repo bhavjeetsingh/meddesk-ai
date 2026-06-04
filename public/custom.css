@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════════════════════
+   CareFirst Medical Center - Minimal Theme
+   Only styles action buttons and sidebar - input area untouched
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --cf-primary: #009688;
+  --cf-primary-dark: #00796B;
+  --cf-primary-light: #B2DFDB;
+  --cf-bg: #F5F7FA;
+  --cf-card-bg: #FFFFFF;
+  --cf-text: #2D3748;
+  --cf-border: #E2E8F0;
+  --cf-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --cf-shadow-hover: 0 8px 24px rgba(0, 150, 136, 0.15);
+  --cf-radius: 12px;
+  --cf-radius-sm: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ACTION BUTTONS ONLY - Cards in chat
+   ═══════════════════════════════════════════════════════════ */
+
+.cl-action-button {
+  background: var(--cf-card-bg) !important;
+  border: 2px solid var(--cf-border) !important;
+  border-radius: var(--cf-radius) !important;
+  padding: 14px 18px !important;
+  margin: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: var(--cf-shadow) !important;
+  font-weight: 500 !important;
+  color: var(--cf-text) !important;
+}
+
+.cl-action-button:hover {
+  border-color: var(--cf-primary) !important;
+  box-shadow: var(--cf-shadow-hover) !important;
+  transform: translateY(-2px) !important;
+  color: var(--cf-primary-dark) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR TOGGLE BUTTON
+   ═══════════════════════════════════════════════════════════ */
+
+button[aria-label="Toggle sidebar"],
+button[aria-label="Open sidebar"] {
+  background: var(--cf-primary) !important;
+  color: white !important;
+  border-radius: var(--cf-radius-sm) !important;
+}
+
+button[aria-label="Toggle sidebar"]:hover,
+button[aria-label="Open sidebar"]:hover {
+  background: var(--cf-primary-dark) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER LINKS
+   ═══════════════════════════════════════════════════════════ */
+
+.cl-header-links a {
+  color: white !important;
+  text-decoration: none !important;
+  padding: 8px 12px !important;
+  border-radius: var(--cf-radius-sm) !important;
+}
+
+.cl-header-links a:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cf-primary-light);
+  border-radius: 4px;
+}

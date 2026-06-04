@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+.files/
+vector_store/
+chainlit.log
+chainlit_err.log
+analytics_data.json
+*.log
+.DS_Store
+Thumbs.db
