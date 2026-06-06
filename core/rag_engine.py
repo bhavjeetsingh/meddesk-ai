@@ -1,5 +1,5 @@
 """
-CareFirst Medical Center - Advanced RAG Pipeline
+MedDesk AI - Advanced RAG Pipeline
 Features: Query Rewriting, Hybrid Search, Reranking (Ollama + HuggingFace)
 """
 from langchain_ollama import ChatOllama
@@ -162,7 +162,7 @@ class CareFirstRAG:
     async def _generate_response(self, query: str, context: str, chat_history: List = None) -> str:
         """Generate response using Ollama LLM with retrieved context"""
         system_prompt = """You are MedDesk AI, a professional and empathetic AI receptionist 
-        at CareFirst Medical Center, a clinic in Mumbai, India. You help patients with:
+        at MedDesk AI, a clinic in Mumbai, India. You help patients with:
         - Finding doctors and specialists
         - Scheduling appointments
         - Understanding clinic policies, hours, and services

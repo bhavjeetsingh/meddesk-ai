@@ -1,5 +1,5 @@
 """
-CareFirst Medical Center - Configuration Manager
+MedDesk AI - Configuration Manager
 Centralized configuration for the entire application (Ollama - Free)
 """
 from pydantic_settings import BaseSettings
@@ -23,12 +23,12 @@ class Settings(BaseSettings):
     database_url: str = Field(default="sqlite+aiosqlite:///./meddesk.db")
 
     # Chainlit
-    chainlit_auth_secret: str = Field(default="carefirst-secret-key-2024")
+    chainlit_auth_secret: str = Field(default="meddeskai-secret-key-2024")
 
     # Clinic Info (Indian Context)
-    clinic_name: str = Field(default="CareFirst Medical Center")
+    clinic_name: str = Field(default="MedDesk AI")
     clinic_phone: str = Field(default="+91 98765 43210")
-    clinic_email: str = Field(default="info@carefirstmedical.in")
+    clinic_email: str = Field(default="support@meddeskai.com")
     clinic_address: str = Field(default="201, Sunshine Plaza, MG Road, Andheri West, Mumbai - 400053")
     clinic_hours: str = Field(default="Mon-Sat 9:00 AM - 9:00 PM, Sun: 10:00 AM - 2:00 PM")
 

@@ -159,13 +159,91 @@ class AppointmentSystem:
             if not appointment:
                 return {"success": False, "error": "Appointment not found"}
 
+            if appointment.status in ["cancelled", "completed"]:
+                return {"success": False, "error": f"Appointment is already {appointment.status}"}
+
+            doctor = await session.get(Doctor, appointment.doctor_id)
             appointment.status = AppointmentStatus.CANCELLED.value
             await session.commit()
 
             return {
                 "success": True,
                 "message": f"Appointment #{appointment_id} has been cancelled",
-                "appointment_id": appointment_id
+                "appointment_id": appointment_id,
+                "doctor_name": f"Dr. {doctor.first_name} {doctor.last_name}" if doctor else "Unknown",
+                "date": appointment.appointment_date.strftime("%A, %B %d, %Y at %I:%M %p")
+            }
+
+    async def reschedule_appointment(
+        self,
+        appointment_id: int,
+        new_datetime: datetime
+    ) -> Dict[str, Any]:
+        """Reschedule an existing appointment to a new datetime"""
+        async with async_session() as session:
+            appointment = await session.get(Appointment, appointment_id)
+            if not appointment:
+                return {"success": False, "error": "Appointment not found"}
+
+            if appointment.status in ["cancelled", "completed"]:
+                return {"success": False, "error": f"Cannot reschedule — appointment is already {appointment.status}"}
+
+            doctor = await session.get(Doctor, appointment.doctor_id)
+            if not doctor:
+                return {"success": False, "error": "Doctor not found"}
+
+            # Check if new slot is available
+            existing = await session.execute(
+                select(Appointment).where(
+                    and_(
+                        Appointment.doctor_id == appointment.doctor_id,
+                        Appointment.appointment_date == new_datetime,
+                        Appointment.status.in_(["scheduled", "confirmed"]),
+                        Appointment.id != appointment_id
+                    )
+                )
+            )
+            if existing.scalar():
+                return {"success": False, "error": "The new slot is already booked. Please choose another time."}
+
+            old_date = appointment.appointment_date.strftime("%A, %B %d, %Y at %I:%M %p")
+            appointment.appointment_date = new_datetime
+            appointment.status = AppointmentStatus.SCHEDULED.value
+            await session.commit()
+
+            return {
+                "success": True,
+                "message": f"Appointment #{appointment_id} rescheduled",
+                "appointment_id": appointment_id,
+                "old_datetime": old_date,
+                "new_datetime": new_datetime.strftime("%A, %B %d, %Y at %I:%M %p"),
+                "doctor_name": f"Dr. {doctor.first_name} {doctor.last_name}",
+                "specialty": doctor.specialty
+            }
+
+    async def get_appointment_by_id(self, appointment_id: int) -> Optional[Dict]:
+        """Get a single appointment by ID"""
+        async with async_session() as session:
+            appointment = await session.get(Appointment, appointment_id)
+            if not appointment:
+                return None
+
+            doctor = await session.get(Doctor, appointment.doctor_id)
+            patient = await session.get(Patient, appointment.patient_id)
+
+            return {
+                "appointment_id": appointment.id,
+                "patient_name": f"{patient.first_name} {patient.last_name}" if patient else "Unknown",
+                "patient_email": patient.email if patient else "",
+                "doctor_name": f"Dr. {doctor.first_name} {doctor.last_name}" if doctor else "Unknown",
+                "doctor_id": appointment.doctor_id,
+                "specialty": doctor.specialty if doctor else "",
+                "date": appointment.appointment_date.strftime("%A, %B %d, %Y"),
+                "time": appointment.appointment_date.strftime("%I:%M %p"),
+                "datetime": appointment.appointment_date.isoformat(),
+                "reason": appointment.reason or "",
+                "fee": f"₹{doctor.consultation_fee}" if doctor else "",
+                "status": appointment.status
             }
 
     async def get_patient_appointments(self, patient_email: str) -> List[Dict]:

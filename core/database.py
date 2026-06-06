@@ -25,6 +25,20 @@ class AppointmentStatus(str, enum.Enum):
     NO_SHOW = "no_show"
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(100), unique=True, nullable=False)
+    email = Column(String(200), unique=True, nullable=False)
+    hashed_password = Column(String(200), nullable=False)
+    full_name = Column(String(200), nullable=False)
+    role = Column(String(20), default="patient")  # admin, staff, doctor, patient
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 class Patient(Base):
     __tablename__ = "patients"
 
@@ -107,6 +121,69 @@ engine = create_async_engine(DATABASE_URL, echo=False)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
+def hash_password(password: str) -> str:
+    """Hash a password using passlib with bcrypt"""
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against a hash"""
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+async def get_user_by_username(username: str) -> Optional[User]:
+    """Get a user by username"""
+    async with async_session() as session:
+        from sqlalchemy import select
+        result = await session.execute(
+            select(User).where(User.username == username)
+        )
+        return result.scalar_one_or_none()
+
+
+async def create_user(username: str, email: str, password: str, full_name: str, role: str = "patient") -> dict:
+    """Create a new user"""
+    async with async_session() as session:
+        from sqlalchemy import select
+        
+        # Check if username already exists
+        existing = await session.execute(
+            select(User).where(User.username == username)
+        )
+        if existing.scalar_one_or_none():
+            return {"success": False, "error": "Username already exists"}
+        
+        # Check if email already exists
+        existing_email = await session.execute(
+            select(User).where(User.email == email)
+        )
+        if existing_email.scalar_one_or_none():
+            return {"success": False, "error": "Email already registered"}
+        
+        user = User(
+            username=username,
+            email=email,
+            hashed_password=hash_password(password),
+            full_name=full_name,
+            role=role,
+            is_active=True
+        )
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+        
+        return {
+            "success": True,
+            "user_id": user.id,
+            "username": user.username,
+            "message": f"Account created for {full_name}"
+        }
+
+
 async def init_db():
     """Initialize database tables"""
     async with engine.begin() as conn:
@@ -120,9 +197,51 @@ async def get_db():
 
 
 async def seed_data():
-    """Seed database with sample doctors and patients (Indian Context)"""
+    """Seed database with sample doctors, patients, and users (Indian Context)"""
     async with async_session() as session:
         from sqlalchemy import select, func
+        
+        # Seed users first
+        result = await session.execute(select(func.count(User.id)))
+        if result.scalar() == 0:
+            users = [
+                User(
+                    username="admin",
+                    email="admin@carefirstmedical.in",
+                    hashed_password=hash_password("admin123"),
+                    full_name="Admin User",
+                    role="admin",
+                    is_active=True
+                ),
+                User(
+                    username="staff",
+                    email="staff@carefirstmedical.in",
+                    hashed_password=hash_password("staff123"),
+                    full_name="Reception Staff",
+                    role="staff",
+                    is_active=True
+                ),
+                User(
+                    username="doctor",
+                    email="doctor@carefirstmedical.in",
+                    hashed_password=hash_password("doctor123"),
+                    full_name="Dr. Priya Sharma",
+                    role="doctor",
+                    is_active=True
+                ),
+                User(
+                    username="patient",
+                    email="patient@email.com",
+                    hashed_password=hash_password("patient123"),
+                    full_name="Amit Patel",
+                    role="patient",
+                    is_active=True
+                ),
+            ]
+            session.add_all(users)
+            await session.commit()
+
+        # Check if doctors already exist
         result = await session.execute(select(func.count(Doctor.id)))
         if result.scalar() > 0:
             return

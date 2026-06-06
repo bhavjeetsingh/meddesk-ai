@@ -1,6 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   CareFirst Medical Center - Minimal Theme
-   Only styles action buttons and sidebar - input area untouched
+   MedDesk AI - Theme
    ═══════════════════════════════════════════════════════════ */
 
 :root {
@@ -18,7 +17,25 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ACTION BUTTONS ONLY - Cards in chat
+   CHAT AREA - Constrain width and fix layout
+   ═══════════════════════════════════════════════════════════ */
+
+#chat-container,
+.cl-chat-container,
+.cl-main {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.cl-chat-content,
+.cl-messages {
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ACTION BUTTONS - Cards in chat
    ═══════════════════════════════════════════════════════════ */
 
 .cl-action-button {
@@ -32,6 +49,8 @@
   box-shadow: var(--cf-shadow) !important;
   font-weight: 500 !important;
   color: var(--cf-text) !important;
+  white-space: normal !important;
+  text-align: left !important;
 }
 
 .cl-action-button:hover {
@@ -42,34 +61,58 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SIDEBAR TOGGLE BUTTON
+   SIDEBAR - Style the sidebar panel
    ═══════════════════════════════════════════════════════════ */
 
-button[aria-label="Toggle sidebar"],
-button[aria-label="Open sidebar"] {
-  background: var(--cf-primary) !important;
-  color: white !important;
-  border-radius: var(--cf-radius-sm) !important;
+.cl-sidebar,
+aside.cl-sidebar {
+  background: var(--cf-bg) !important;
+  border-left: 1px solid var(--cf-border) !important;
 }
 
-button[aria-label="Toggle sidebar"]:hover,
-button[aria-label="Open sidebar"]:hover {
-  background: var(--cf-primary-dark) !important;
+.cl-sidebar-title,
+.cl-sidebar-title h2 {
+  color: var(--cf-primary-dark) !important;
+  font-weight: 600 !important;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   HEADER LINKS
+   REMOVE ENVELOPE ICONS (Chainlit watermark)
    ═══════════════════════════════════════════════════════════ */
 
-.cl-header-links a {
-  color: white !important;
-  text-decoration: none !important;
-  padding: 8px 12px !important;
-  border-radius: var(--cf-radius-sm) !important;
+.cl-footer,
+.cl-footer a[href*="chainlit"],
+.cl-footer-icon,
+a[target="_blank"][rel="noopener noreferrer"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
 }
 
-.cl-header-links a:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
+/* ═══════════════════════════════════════════════════════════
+   HEADER - Remove extra elements
+   ═══════════════════════════════════════════════════════════ */
+
+.cl-header-links {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CHAT INPUT - Single line, compact
+   ═══════════════════════════════════════════════════════════ */
+
+.cl-chat-input,
+.cl-input-area,
+.cl-text-input {
+  max-height: 48px !important;
+}
+
+.cl-text-input textarea {
+  max-height: 48px !important;
+  min-height: 40px !important;
+  resize: none !important;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -83,4 +126,35 @@ button[aria-label="Open sidebar"]:hover {
 ::-webkit-scrollbar-thumb {
   background: var(--cf-primary-light);
   border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NEW CHAT BUTTON - Clean text only
+   ═══════════════════════════════════════════════════════════ */
+
+button[aria-label="New Chat"],
+button[aria-label="New chat"] {
+  font-weight: 500 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABLE STYLING in messages
+   ═══════════════════════════════════════════════════════════ */
+
+.cl-message table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 8px 0 !important;
+}
+
+.cl-message th,
+.cl-message td {
+  border: 1px solid var(--cf-border) !important;
+  padding: 8px 12px !important;
+  text-align: left !important;
+}
+
+.cl-message th {
+  background: var(--cf-primary-light) !important;
+  font-weight: 600 !important;
 }

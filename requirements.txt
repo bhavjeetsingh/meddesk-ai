@@ -30,6 +30,10 @@ python-docx
 sqlalchemy
 aiosqlite
 
+# Authentication
+passlib
+bcrypt
+
 # UI - Chainlit
 chainlit
 

@@ -18,16 +18,16 @@
     },
     "auth": {
         "login": {
-            "title": "Login to access the app",
+            "title": "🏥 MedDesk AI",
             "form": {
                 "email": {
-                    "label": "Email address",
-                    "required": "email is a required field",
-                    "placeholder": "me@example.com"
+                    "label": "Username",
+                    "required": "Username is required",
+                    "placeholder": "Enter your username"
                 },
                 "password": {
                     "label": "Password",
-                    "required": "password is a required field"
+                    "required": "Password is required"
                 },
                 "actions": {
                     "signin": "Sign In"
@@ -48,7 +48,7 @@
                 "oauthAccountNotLinked": "To confirm your identity, sign in with the same account you used originally",
                 "emailSignin": "The e-mail could not be sent",
                 "emailVerify": "Please verify your email, a new email has been sent",
-                "credentialsSignin": "Sign in failed. Check the details you provided are correct",
+                "credentialsSignin": "Invalid username or password. Please try again.",
                 "sessionRequired": "Please sign in to access this page"
             }
         },
@@ -198,7 +198,7 @@
     "navigation": {
         "header": {
             "chat": "Chat",
-            "readme": "Readme",
+            "readme": "About",
             "theme": {
                 "light": "Light Theme",
                 "dark": "Dark Theme",

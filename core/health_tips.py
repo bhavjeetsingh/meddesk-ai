@@ -93,3 +93,90 @@ def get_seasonal_tip() -> Dict:
 
     tips = HEALTH_TIPS.get(category, HEALTH_TIPS["general"])
     return random.choice(tips)
+
+
+# Condition-to-category mapping for personalized tips
+CONDITION_TIPS = {
+    "diabetes": "diabetes",
+    "sugar": "diabetes",
+    "blood sugar": "diabetes",
+    "heart": "heart",
+    "blood pressure": "heart",
+    "bp": "heart",
+    "cholesterol": "heart",
+    "hypertension": "heart",
+    "skin": "general",
+    "acne": "general",
+    "rash": "general",
+    "joint": "general",
+    "bone": "general",
+    "back pain": "general",
+    "anxiety": "mental",
+    "depression": "mental",
+    "stress": "mental",
+    "sleep": "mental",
+    "insomnia": "mental",
+    "women": "women",
+    "menstrual": "women",
+    "pregnancy": "women",
+    "elderly": "eldercare",
+    "senior": "eldercare",
+    "monsoon": "monsoon",
+    "dengue": "monsoon",
+    "malaria": "monsoon",
+}
+
+
+def get_personalized_tips(conditions: List[str], count: int = 3) -> List[Dict]:
+    """Get tips personalized based on patient's known conditions"""
+    matched_categories = set()
+    for condition in conditions:
+        cond_lower = condition.lower().strip()
+        for keyword, category in CONDITION_TIPS.items():
+            if keyword in cond_lower:
+                matched_categories.add(category)
+
+    if not matched_categories:
+        return get_daily_tips(count)
+
+    tips = []
+    for cat in matched_categories:
+        cat_tips = HEALTH_TIPS.get(cat, [])
+        tips.extend(cat_tips)
+
+    if not tips:
+        return get_daily_tips(count)
+
+    random.shuffle(tips)
+    return tips[:count]
+
+
+def get_tips_for_symptoms(symptom_keywords: List[str], count: int = 2) -> List[Dict]:
+    """Get relevant tips based on reported symptoms"""
+    tips = []
+    for kw in symptom_keywords:
+        kw_lower = kw.lower()
+        if any(w in kw_lower for w in ["heart", "chest", "blood pressure", "bp"]):
+            tips.extend(HEALTH_TIPS.get("heart", []))
+        if any(w in kw_lower for w in ["sugar", "diabetes"]):
+            tips.extend(HEALTH_TIPS.get("diabetes", []))
+        if any(w in kw_lower for w in ["stress", "anxiety", "sleep", "mental"]):
+            tips.extend(HEALTH_TIPS.get("mental", []))
+        if any(w in kw_lower for w in ["skin", "rash", "acne"]):
+            tips.extend([t for t in HEALTH_TIPS.get("general", []) if "skin" in t.get("title", "").lower() or "hygiene" in t.get("category", "")])
+        if any(w in kw_lower for w in ["monsoon", "fever", "cold", "cough"]):
+            tips.extend(HEALTH_TIPS.get("monsoon", []))
+
+    if not tips:
+        return get_daily_tips(count)
+
+    seen = set()
+    unique = []
+    for t in tips:
+        key = t["title"]
+        if key not in seen:
+            seen.add(key)
+            unique.append(t)
+
+    random.shuffle(unique)
+    return unique[:count]

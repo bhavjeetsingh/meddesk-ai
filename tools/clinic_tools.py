@@ -24,7 +24,7 @@ class ClinicTools:
             "hours": self.config.clinic_hours,
             "website": "www.carefirstmedical.in",
             "parking": "Free parking available in the building basement. Valet parking available on weekdays.",
-            "wifi": "Free WiFi available. Network: CareFirst-Guest, Password: Welcome2024"
+            "wifi": "Free WiFi available. Network: MedDesk-Guest, Password: Welcome2024"
         }
 
         self.services = {
